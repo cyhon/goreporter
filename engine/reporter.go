@@ -26,7 +26,7 @@ import (
 	"github.com/golang/glog"
 	"github.com/json-iterator/go"
 
-	"github.com/360EntSecGroup-Skylar/goreporter/utils"
+	"github.com/cyhon/goreporter/utils"
 )
 
 type Synchronizer struct {
@@ -106,7 +106,9 @@ func (r *Reporter) Report() error {
 	}
 
 	for _, linter := range r.Linters {
+		fmt.Println("===> start ", linter.GetName())
 		r.compute(linter, params)
+		fmt.Println("===> stop ", linter.GetName())
 	}
 
 	r.TimeStamp = time.Now().Format("2006-01-02-15-04-05")

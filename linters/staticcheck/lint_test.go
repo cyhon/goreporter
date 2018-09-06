@@ -3,8 +3,8 @@ package staticcheck
 import (
 	"testing"
 
-	"github.com/360EntSecGroup-Skylar/goreporter/linters/simpler/lint/lintutil"
-	"github.com/360EntSecGroup-Skylar/goreporter/linters/simpler/lint/testutil"
+	"github.com/cyhon/goreporter/linters/simpler/lint/lintutil"
+	"github.com/cyhon/goreporter/linters/simpler/lint/testutil"
 )
 
 func TestAll(t *testing.T) {

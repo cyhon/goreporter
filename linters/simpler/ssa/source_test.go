@@ -21,8 +21,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/360EntSecGroup-Skylar/goreporter/linters/simpler/ssa"
-	"github.com/360EntSecGroup-Skylar/goreporter/linters/simpler/ssa/ssautil"
+	"github.com/cyhon/goreporter/linters/simpler/ssa"
+	"github.com/cyhon/goreporter/linters/simpler/ssa/ssautil"
 	"golang.org/x/tools/go/ast/astutil"
 	"golang.org/x/tools/go/loader"
 )

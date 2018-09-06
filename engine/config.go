@@ -209,6 +209,7 @@ type CodeOptimization struct {
 		SimpleCode     StyleItem `json:"simple_code"`
 		StaticCode     StyleItem `json:"static_code"`
 		CopyCode       CopyItem  `json:"copy_code"`
+		ErrorCheck     StyleItem  `json:"error_check"`
 		InterfacerCode StyleItem `json:"interfacer_code"`
 	} `json:"content"`
 }

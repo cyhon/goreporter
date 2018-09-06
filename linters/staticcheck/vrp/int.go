@@ -6,7 +6,7 @@ import (
 	"go/types"
 	"math/big"
 
-	"github.com/360EntSecGroup-Skylar/goreporter/linters/simpler/ssa"
+	"github.com/cyhon/goreporter/linters/simpler/ssa"
 )
 
 type Zs []Z

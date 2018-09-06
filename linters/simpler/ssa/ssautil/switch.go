@@ -26,7 +26,7 @@ import (
 	"go/token"
 	"go/types"
 
-	"github.com/360EntSecGroup-Skylar/goreporter/linters/simpler/ssa"
+	"github.com/cyhon/goreporter/linters/simpler/ssa"
 )
 
 // A ConstCase represents a single constant comparison.

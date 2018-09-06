@@ -6,7 +6,7 @@ import (
 	"log"
 	"sort"
 
-	"github.com/360EntSecGroup-Skylar/goreporter/linters/copycheck/syntax"
+	"github.com/cyhon/goreporter/linters/copycheck/syntax"
 )
 
 type FileReader interface {

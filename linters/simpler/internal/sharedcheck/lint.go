@@ -4,8 +4,8 @@ import (
 	"go/ast"
 	"go/types"
 
-	"github.com/360EntSecGroup-Skylar/goreporter/linters/simpler/lint"
-	"github.com/360EntSecGroup-Skylar/goreporter/linters/simpler/ssa"
+	"github.com/cyhon/goreporter/linters/simpler/lint"
+	"github.com/cyhon/goreporter/linters/simpler/ssa"
 )
 
 func CheckRangeStringRunes(nodeFns map[ast.Node]*ssa.Function, j *lint.Job) {

@@ -30,7 +30,7 @@ import (
 	"github.com/golang/glog"
 	"github.com/json-iterator/go"
 
-	"github.com/360EntSecGroup-Skylar/goreporter/utils"
+	"github.com/cyhon/goreporter/utils"
 )
 
 var (
@@ -166,6 +166,11 @@ func (hd *HtmlData) converterCodeOptimization(structData Reporter) {
 	codeOptimizationHtmlData.Summary.FilesNum = codeOptimizationHtmlData.Summary.FilesNum + codeSimpleHtmlData.filesNum
 	codeOptimizationHtmlData.Summary.IssuesNum = codeOptimizationHtmlData.Summary.IssuesNum + codeSimpleHtmlData.issuesNum
 	codeOptimizationHtmlData.Content.SimpleCode = codeSimpleHtmlData
+
+	codeErrorHtmlData := converterErrorCheck(structData)
+	codeOptimizationHtmlData.Summary.FilesNum = codeOptimizationHtmlData.Summary.FilesNum + codeErrorHtmlData.filesNum
+	codeOptimizationHtmlData.Summary.IssuesNum = codeOptimizationHtmlData.Summary.IssuesNum + codeErrorHtmlData.issuesNum
+	codeOptimizationHtmlData.Content.ErrorCheck = codeErrorHtmlData
 
 	codeDeadHtmlData := converterCodeDead(structData)
 	codeOptimizationHtmlData.Summary.FilesNum = codeOptimizationHtmlData.Summary.FilesNum + codeDeadHtmlData.filesNum
@@ -395,6 +400,49 @@ func (hd *HtmlData) converterCodeCount(structData Reporter) {
 func converterCodeSimple(structData Reporter) (simpleHtmlData StyleItem) {
 	simpleHtmlData.Label = `gosimple is a linter for Go source code that specialises on simplifying code.`
 	if result, ok := structData.Metrics["SimpleTips"]; ok {
+		fileMap := make(map[string]bool, 0)
+		mapItem2DetailIndex := make(map[string]int, 0)
+		for _, summary := range result.Summaries {
+			simpleCodeTips := summary.Errors
+			for i := 0; i < len(simpleCodeTips); i++ {
+				simpleCodeTip := strings.Split(simpleCodeTips[i].ErrorString, ":")
+				if len(simpleCodeTip) == 4 {
+					if fileIndex, ok := mapItem2DetailIndex[strings.Join(simpleCodeTip[0:2], ":")]; ok {
+						simpleHtmlData.Detail[fileIndex].Content = append(simpleHtmlData.Detail[fileIndex].Content, strings.Join(simpleCodeTip[2:], ":"))
+					} else {
+						spellcode := Item{
+							File: strings.Join(simpleCodeTip[0:2], ":"),
+						}
+						spellcode.Content = append(spellcode.Content, strings.Join(simpleCodeTip[2:], ":"))
+						fileMap[spellcode.File] = true
+						mapItem2DetailIndex[strings.Join(simpleCodeTip[0:2], ":")] = len(simpleHtmlData.Detail)
+						simpleHtmlData.Detail = append(simpleHtmlData.Detail, spellcode)
+					}
+				} else if len(simpleCodeTip) == 5 {
+					if fileIndex, ok := mapItem2DetailIndex[strings.Join(simpleCodeTip[0:3], ":")]; ok {
+						simpleHtmlData.Detail[fileIndex].Content = append(simpleHtmlData.Detail[fileIndex].Content, strings.Join(simpleCodeTip[3:], ":"))
+					} else {
+						spellcode := Item{
+							File: strings.Join(simpleCodeTip[0:3], ":"),
+						}
+						spellcode.Content = append(spellcode.Content, strings.Join(simpleCodeTip[3:], ":"))
+						fileMap[spellcode.File] = true
+						mapItem2DetailIndex[strings.Join(simpleCodeTip[0:3], ":")] = len(simpleHtmlData.Detail)
+						simpleHtmlData.Detail = append(simpleHtmlData.Detail, spellcode)
+					}
+				}
+			}
+		}
+		simpleHtmlData.filesNum = len(fileMap)
+		simpleHtmlData.issuesNum = len(simpleHtmlData.Detail)
+	}
+
+	return simpleHtmlData
+}
+
+func converterErrorCheck(structData Reporter) (simpleHtmlData StyleItem) {
+	simpleHtmlData.Label = `errcheck is a program for checking for unchecked errors in go programs.`
+	if result, ok := structData.Metrics["ErrorCheckTips"]; ok {
 		fileMap := make(map[string]bool, 0)
 		mapItem2DetailIndex := make(map[string]int, 0)
 		for _, summary := range result.Summaries {

@@ -4,8 +4,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/360EntSecGroup-Skylar/goreporter/linters/copycheck"
-	"github.com/360EntSecGroup-Skylar/goreporter/utils"
+	"github.com/cyhon/goreporter/linters/copycheck"
+	"github.com/cyhon/goreporter/utils"
 )
 
 type StrategyCopyCheck struct {

@@ -4,7 +4,7 @@ import (
 	"go/token"
 	"go/types"
 
-	"github.com/360EntSecGroup-Skylar/goreporter/linters/simpler/ssa"
+	"github.com/cyhon/goreporter/linters/simpler/ssa"
 )
 
 func concreteReturnTypes(fn *ssa.Function) []*types.Tuple {

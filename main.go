@@ -27,8 +27,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/360EntSecGroup-Skylar/goreporter/engine"
-	"github.com/360EntSecGroup-Skylar/goreporter/engine/processbar"
+	"github.com/cyhon/goreporter/engine"
+	"github.com/cyhon/goreporter/engine/processbar"
 	"github.com/facebookgo/inject"
 )
 
@@ -115,16 +115,17 @@ func main() {
 	strategyCountCode := &engine.StrategyCountCode{}
 	strategyCyclo := &engine.StrategyCyclo{}
 	strategyDeadCode := &engine.StrategyDeadCode{}
-	strategyDependGraph := &engine.StrategyDependGraph{}
+	//strategyDependGraph := &engine.StrategyDependGraph{}
 	strategyDepth := &engine.StrategyDepth{}
 	strategyImportPackages := &engine.StrategyImportPackages{}
 	strategyInterfacer := &engine.StrategyInterfacer{}
 	strategySimpleCode := &engine.StrategySimpleCode{}
 	strategySpellCheck := &engine.StrategySpellCheck{}
-	strategyUnitTest := &engine.StrategyUnitTest{}
+	//strategyUnitTest := &engine.StrategyUnitTest{}
 	strategyLint := &engine.StrategyLint{}
 	strategyGoVet := &engine.StrategyGoVet{}
 	strategyGoFmt := &engine.StrategyGoFmt{}
+	strategyErrorCheck := &engine.StrategyErrorCheck{}
 
 	if err := inject.Populate(
 		reporter,
@@ -132,25 +133,26 @@ func main() {
 		strategyCountCode,
 		strategyCyclo,
 		strategyDeadCode,
-		strategyDependGraph,
+		//strategyDependGraph,
 		strategyDepth,
 		strategyImportPackages,
 		strategyInterfacer,
 		strategySimpleCode,
 		strategySpellCheck,
-		strategyUnitTest,
+		//strategyUnitTest,
 		strategyLint,
 		strategyGoVet,
 		strategyGoFmt,
+		strategyErrorCheck,
 		syncRW,
 		waitGW,
 	); err != nil {
 		log.Fatal(err)
 	}
 
-	reporter.AddLinters(strategyCountCode, strategyCyclo, strategyDeadCode, strategyDependGraph,
+	reporter.AddLinters(strategyCountCode, strategyCyclo, strategyDeadCode, strategyErrorCheck,
 		strategyDepth, strategyImportPackages, strategyInterfacer, strategySimpleCode,
-		strategySpellCheck, strategyUnitTest, strategyLint, strategyGoVet, strategyGoFmt)
+		strategySpellCheck, strategyLint, strategyGoVet, strategyGoFmt)
 
 	go processbar.LinterProcessBar(synchronizer.LintersProcessChans, synchronizer.LintersFinishedSignal)
 

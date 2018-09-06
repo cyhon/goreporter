@@ -1,38 +1,40 @@
 package engine
 
 import (
-	"strconv"
 	"strings"
-
-	"github.com/cyhon/goreporter/linters/spellcheck"
+	"strconv"
+	"github.com/cyhon/goreporter/linters/errorcheck"
 	"github.com/cyhon/goreporter/utils"
 )
 
-type StrategySpellCheck struct {
+type StrategyErrorCheck struct {
 	Sync *Synchronizer `inject:""`
 }
 
-func (s *StrategySpellCheck) GetName() string {
-	return "SpellCheck"
+func (s *StrategyErrorCheck) GetName() string {
+	return "ErrorCheck"
 }
 
-func (s *StrategySpellCheck) GetDescription() string {
-	return "Check the project variables, functions, etc. naming spelling is wrong."
+func (s *StrategyErrorCheck) GetDescription() string {
+	return "Query all duplicate code in the project and give duplicate code locations and rows."
 }
 
-func (s *StrategySpellCheck) GetWeight() float64 {
+func (s *StrategyErrorCheck) GetWeight() float64 {
 	return 0.05
 }
 
-func (s *StrategySpellCheck) Compute(parameters StrategyParameter) (summaries *Summaries) {
+// linterCopy provides a function that scans all duplicate code in the project and give
+// duplicate code locations and rows.It will extract from the linter need to convert the
+// data.The result will be saved in the r's attributes.
+func (s *StrategyErrorCheck) Compute(parameters StrategyParameter) (summaries *Summaries) {
 	summaries = NewSummaries()
 
-	spelltips := spellcheck.SpellCheck(parameters.ProjectPath, parameters.ExceptPackages)
-	sumProcessNumber := int64(10)
-	processUnit := utils.GetProcessUnit(sumProcessNumber, len(spelltips))
+	errCodeList := errorcheck.ErrorCheck(parameters.ProjectPath)
+	sumProcessNumber := int64(7)
+	processUnit := utils.GetProcessUnit(sumProcessNumber, len(errCodeList))
 
-	for _, simpleTip := range spelltips {
-		simpleTips := strings.Split(simpleTip, ":")
+	for _, errTip := range errCodeList {
+		simpleTips := strings.Split(errTip, ":")
 		if len(simpleTips) == 4 {
 			packageName := utils.PackageNameFromGoPath(simpleTips[0])
 			line, _ := strconv.Atoi(simpleTips[1])
@@ -46,7 +48,7 @@ func (s *StrategySpellCheck) Compute(parameters StrategyParameter) (summaries *S
 				summaries.Summaries[packageName] = summarie
 			} else {
 				summarie := Summary{
-					Name:   utils.PackageAbsPathExceptSuffix(simpleTips[0]),
+					Name:   packageName,
 					Errors: make([]Error, 0),
 				}
 				summarie.Errors = append(summarie.Errors, erroru)
@@ -59,10 +61,11 @@ func (s *StrategySpellCheck) Compute(parameters StrategyParameter) (summaries *S
 			sumProcessNumber = sumProcessNumber - processUnit
 		}
 	}
+
 	return
 }
 
-func (s *StrategySpellCheck) Percentage(summaries *Summaries) float64 {
+func (s *StrategyErrorCheck) Percentage(summaries *Summaries) float64 {
 	summaries.RLock()
 	defer summaries.RUnlock()
 	return utils.CountPercentage(len(summaries.Summaries))
