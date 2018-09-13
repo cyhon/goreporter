@@ -791,7 +791,7 @@ func (hd *HtmlData) converterDependGraph(structData Reporter) {
 
 // SaveAsHtml is a function that save HtmlData as a html report.And will receive
 // htmlData, projectPath, savePath and tpl parameters.
-func SaveAsHtml(htmlData HtmlData, projectPath, savePath, timestamp, tpl string) {
+func SaveAsHtml(htmlData HtmlData, projectPath, savePath, saveName, timestamp, tpl string) {
 	t, err := template.New("goreporter").Parse(tpl)
 	if err != nil {
 		glog.Errorln(err)
@@ -807,8 +807,11 @@ func SaveAsHtml(htmlData HtmlData, projectPath, savePath, timestamp, tpl string)
 		glog.Errorln(err)
 	}
 	projectName := utils.ProjectName(projectPath)
+	if saveName == "" {
+		saveName = projectName+"-"+timestamp
+	}
 	if savePath != "" {
-		htmlpath = strings.Replace(savePath+string(filepath.Separator)+projectName+"-"+timestamp+".html", string(filepath.Separator)+string(filepath.Separator), string(filepath.Separator), -1)
+		htmlpath = strings.Replace(savePath+string(filepath.Separator)+saveName+".html", string(filepath.Separator)+string(filepath.Separator), string(filepath.Separator), -1)
 		err = ioutil.WriteFile(htmlpath, out.Bytes(), 0666)
 		if err != nil {
 			glog.Errorln(err)
@@ -823,7 +826,7 @@ func SaveAsHtml(htmlData HtmlData, projectPath, savePath, timestamp, tpl string)
 		}
 
 	} else {
-		htmlpath = projectName + "-" + timestamp + ".html"
+		htmlpath = saveName + ".html"
 		err = ioutil.WriteFile(htmlpath, out.Bytes(), 0666)
 		if err != nil {
 			glog.Errorln(err)

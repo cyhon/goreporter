@@ -49,6 +49,7 @@ type Reporter struct {
 
 	ProjectPath    string `json:"-"`
 	ReportPath     string `json:"-"`
+	ReportName     string `json:"-"`
 	HtmlTemplate   string `json:"-"`
 	ReportFormat   string `json:"-"`
 	ExceptPackages string `json:"-"`
@@ -237,7 +238,7 @@ func (r *Reporter) toHtml() (err error) {
 	htmlData.IssuesNum = issues
 	htmlData.Date = r.TimeStamp
 
-	SaveAsHtml(htmlData, r.ProjectPath, r.ReportPath, r.TimeStamp, r.HtmlTemplate)
+	SaveAsHtml(htmlData, r.ProjectPath, r.ReportPath, r.ReportName, r.TimeStamp, r.HtmlTemplate)
 
 	return
 }
@@ -249,12 +250,13 @@ func (r *Reporter) GetFinalScore() (score float64) {
 	return
 }
 
-func NewReporter(projectPath, reportPath, reportFormat, htmlTemplate string) *Reporter {
+func NewReporter(projectPath, reportPath, reportName, reportFormat, htmlTemplate string) *Reporter {
 	return &Reporter{
 		StartTime:    time.Now(),
 		Metrics:      make(map[string]Metric, 0),
 		ProjectPath:  projectPath,
 		ReportPath:   reportPath,
+		ReportName:   reportName,
 		ReportFormat: reportFormat,
 		HtmlTemplate: htmlTemplate,
 	}

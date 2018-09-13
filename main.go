@@ -50,6 +50,7 @@ var (
 	version        = flag.Bool("version", false, "print GoReporter version.")
 	projectPath    = flag.String("p", "", "path of project.")
 	reportPath     = flag.String("r", "", "path of report.")
+	reportName     = flag.String("n", "", "file name of report.")
 	exceptPackages = flag.String("e", "", "except packages.")
 	templatePath   = flag.String("t", "", "report html template path.")
 	reportFormat   = flag.String("f", "", "project report format(text/json/html).")
@@ -111,7 +112,7 @@ func main() {
 	syncRW := &sync.RWMutex{}
 	waitGW := &engine.WaitGroupWrapper{}
 
-	reporter := engine.NewReporter(*projectPath, *reportPath, *reportFormat, templateHtml)
+	reporter := engine.NewReporter(*projectPath, *reportPath, *reportName, *reportFormat, templateHtml)
 	strategyCountCode := &engine.StrategyCountCode{}
 	//strategyCyclo := &engine.StrategyCyclo{}
 	strategyDeadCode := &engine.StrategyDeadCode{}
