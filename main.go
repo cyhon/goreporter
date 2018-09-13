@@ -113,36 +113,36 @@ func main() {
 
 	reporter := engine.NewReporter(*projectPath, *reportPath, *reportFormat, templateHtml)
 	strategyCountCode := &engine.StrategyCountCode{}
-	strategyCyclo := &engine.StrategyCyclo{}
+	//strategyCyclo := &engine.StrategyCyclo{}
 	strategyDeadCode := &engine.StrategyDeadCode{}
 	//strategyDependGraph := &engine.StrategyDependGraph{}
 	strategyDepth := &engine.StrategyDepth{}
-	strategyImportPackages := &engine.StrategyImportPackages{}
-	strategyInterfacer := &engine.StrategyInterfacer{}
-	strategySimpleCode := &engine.StrategySimpleCode{}
+	//strategyImportPackages := &engine.StrategyImportPackages{}
+	//strategyInterfacer := &engine.StrategyInterfacer{}
+	//strategySimpleCode := &engine.StrategySimpleCode{}
 	strategySpellCheck := &engine.StrategySpellCheck{}
-	//strategyUnitTest := &engine.StrategyUnitTest{}
-	strategyLint := &engine.StrategyLint{}
-	strategyGoVet := &engine.StrategyGoVet{}
-	strategyGoFmt := &engine.StrategyGoFmt{}
+	strategyUnitTest := &engine.StrategyUnitTest{}
+	//strategyLint := &engine.StrategyLint{}
+	//strategyGoVet := &engine.StrategyGoVet{}
+	//strategyGoFmt := &engine.StrategyGoFmt{}
 	strategyErrorCheck := &engine.StrategyErrorCheck{}
 
 	if err := inject.Populate(
 		reporter,
 		synchronizer,
 		strategyCountCode,
-		strategyCyclo,
+		//strategyCyclo,
 		strategyDeadCode,
 		//strategyDependGraph,
 		strategyDepth,
-		strategyImportPackages,
-		strategyInterfacer,
-		strategySimpleCode,
+		//strategyImportPackages,
+		//strategyInterfacer,
+		//strategySimpleCode,
 		strategySpellCheck,
-		//strategyUnitTest,
-		strategyLint,
-		strategyGoVet,
-		strategyGoFmt,
+		strategyUnitTest,
+		//strategyLint,
+		//strategyGoVet,
+		//strategyGoFmt,
 		strategyErrorCheck,
 		syncRW,
 		waitGW,
@@ -150,9 +150,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	reporter.AddLinters(strategyCountCode, strategyCyclo, strategyDeadCode, strategyErrorCheck,
-		strategyDepth, strategyImportPackages, strategyInterfacer, strategySimpleCode,
-		strategySpellCheck, strategyLint, strategyGoVet, strategyGoFmt)
+	reporter.AddLinters(strategyCountCode, strategyDeadCode, strategyErrorCheck, strategyDepth, strategySpellCheck, strategyUnitTest)
 
 	go processbar.LinterProcessBar(synchronizer.LintersProcessChans, synchronizer.LintersFinishedSignal)
 
